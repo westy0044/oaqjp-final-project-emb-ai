@@ -10,10 +10,11 @@ def home():
 
 
 @app.route("/emotionDetector")
-def RunSentimentAnalysis():
-    text = str(request.args.get('textToAnalyze'))  
-
-    result = emotion_detector(text)
+def detector_route():
+    text = str(request.args.get('textToAnalyze')) 
+    result_dict = emotion_detector(text) 
+    result = f"For the given statement, the system response is 'anger' {str(result_dict['anger'])}, ‘disgust’: {str(result_dict['disgust'])}, ‘fear’: {str(result_dict['fear'])}, ‘joy’: {str(result_dict['joy'])} and ‘sadness’: {str(result_dict['sadness'])}. The dominant emotion is <strong>{result_dict['dominant_emotion']}</strong>"
+    return result
 
 
 if __name__ == "__main__":
