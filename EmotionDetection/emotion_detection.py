@@ -6,18 +6,25 @@ def emotion_detector(text_to_analyse):  # Define a function named sentiment_anal
     header = {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"}
     myobj = { "raw_document": { "text": text_to_analyse } } # Create a dictionary with the text to be analyzed   
     response = requests.post(url, json = myobj, headers=header)  # Send a POST request to the API with the text and headers
-    
+    status_code = response.status_code
      # Parsing the JSON response from the API
-    formatted_response = json.loads(response.text)
-
-    mydict = formatted_response['emotionPredictions'][0]['emotion']
+    formatted_response = json.loads(response.text)    
     
-    anger_score = mydict['anger']
-    disgust_score = mydict['disgust']
-    fear_score = mydict['fear']
-    joy_score = mydict['joy']
-    sadness_score = mydict['sadness']
-    dominant_emotion = max(mydict, key=mydict.get)
+    if status_code == 400:
+        anger_score = "None"
+        disgust_score = "None"
+        fear_score = "None"
+        joy_score = "None"
+        sadness_score = "None"
+        dominant_emotion = "None"
+    else:
+        mydict = formatted_response['emotionPredictions'][0]['emotion']
+        anger_score = mydict['anger']
+        disgust_score = mydict['disgust']
+        fear_score = mydict['fear']
+        joy_score = mydict['joy']
+        sadness_score = mydict['sadness']
+        dominant_emotion = max(mydict, key=mydict.get)
 
     return {
     'anger': anger_score,
